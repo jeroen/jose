@@ -49,3 +49,17 @@ validate_numericdate <- function(val){
     stop("Invalid 'NumericDate' (seconds since epoch) value: ", val)
   round(val)
 }
+
+validate_exp <- function(val, exp) {
+    val <- validate_numericdate(val)
+    if (is.null(exp)) {
+        warning("Not checking expiration time")
+        return(val)
+    }
+    now <- unclass(Sys.time())
+    if (is.null(val) || val < now)
+        stop("Expiration time exceeded")
+    if (val > ceiling(now + exp))
+        stop("Expiration time invalid")
+    val
+}
